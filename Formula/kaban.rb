@@ -1,8 +1,8 @@
 class Kaban < Formula
   desc "Terminal Kanban for AI Code Agents"
   homepage "https://beshkenadze.github.io/kaban"
-  url "https://registry.npmjs.org/@kaban-board/cli/-/cli-0.2.8.tgz"
-  sha256 "1fc09cc997bfed399250a1854061afa13e5149e35902eab268331123bd701667"
+  url "https://registry.npmjs.org/@kaban-board/cli/-/cli-0.2.9.tgz"
+  sha256 "02c49a99a3ea2f859d8e4a5c9ce2fe1ae817deb5a8d0ce779b96b8b32622b3bd"
   license "MIT"
 
   depends_on "node"
