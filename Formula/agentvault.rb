@@ -23,19 +23,36 @@ class Agentvault < Formula
     # one-time setup tool for the age-file backend and is intentionally not shipped.
     system "go", "build", *std_go_args(output: bin/"avd"), "./cmd/avd"
     system "go", "build", *std_go_args(output: bin/"av"), "./cmd/av"
+    (var/"log/agentvault").mkpath
+  end
+
+  # `brew services start agentvault` runs avd as a per-user LaunchAgent in the GUI
+  # (Aqua) session — the ONLY context where the Touch ID prompt can appear (a root
+  # LaunchDaemon cannot). It auto-starts at login and is kept alive. Backends that
+  # need configuration (the age-file backend's AV_AGE_VAULT / AV_AGE_IDENTITY) can be
+  # added here via `environment_variables`; Keychain and 1Password need none.
+  service do
+    run [opt_bin/"avd"]
+    keep_alive true
+    log_path var/"log/agentvault/avd.log"
+    error_log_path var/"log/agentvault/avd.err.log"
   end
 
   def caveats
     <<~EOS
       AgentVault is macOS-only and gates secrets behind Touch ID.
-      `av` autostarts the `avd` daemon on first use — no manual start needed.
 
-      Quick start (in a project):
+      Run the broker daemon as a login service (recommended — Touch ID needs the
+      GUI session, which this provides):
+        brew services start agentvault
+
+      Then, in a project:
         av init --agent claude-code    # generate adapter hook + skill files
+        av unlock                      # Touch ID -> opens the session
         av status                      # session state
 
-      Optional: run avd as a resident LaunchAgent.
-        https://github.com/beshkenadze/agentvault/blob/main/docs/launchagent.md
+      (For one-off use `av` also autostarts avd, but the Touch ID prompt is only
+      reliable when avd runs as the brew service above.)
     EOS
   end
 
