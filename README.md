@@ -8,6 +8,13 @@ Custom Homebrew formulas by [@beshkenadze](https://github.com/beshkenadze).
 brew tap beshkenadze/tap
 ```
 
+Newer Homebrew gates third-party taps behind explicit trust. If you see
+`Refusing to load formula ... from untrusted tap`, trust it once:
+
+```bash
+brew trust beshkenadze/tap
+```
+
 ## Formulas
 
 ### Kaban
