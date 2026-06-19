@@ -1,8 +1,8 @@
 class Agentvault < Formula
   desc "Agent-agnostic secret broker for AI coding agents (av + avd)"
   homepage "https://github.com/beshkenadze/agentvault"
-  url "https://github.com/beshkenadze/agentvault/archive/refs/tags/v0.2.1.tar.gz"
-  sha256 "91c92882ce2ab5d337cac8112ffdce7fed1daa69a1d78959a63c85e125ba85b7"
+  url "https://github.com/beshkenadze/agentvault/archive/refs/tags/v0.2.2.tar.gz"
+  sha256 "35059189be3cd543372c760af1749760f48b88ac6ab48229791ade65b067baa1"
   # No SPDX license stanza yet: upstream has not added a LICENSE file. Once it does,
   # set e.g. `license "MIT"` here. `brew install` works without it; `brew audit
   # --strict` will note its absence.
@@ -56,7 +56,8 @@ class Agentvault < Formula
       Keychain (OS-encrypted). The Secure Enclave tier needs a signed build (planned
       Cask). `av unlock` is optional — operations unlock on demand.
 
-      av version          # av/avd versions (warns on mismatch), active key tier
+      After `brew upgrade` no manual restart is needed — `av` self-heals a stale daemon
+      (av version shows av/avd + active tier).
       Keychain/1Password are read-only here (populate with `security` / `op`).
       Agent adapter files: av init --agent claude-code
     EOS
