@@ -1,8 +1,8 @@
 class Agentvault < Formula
   desc "Agent-agnostic secret broker for AI coding agents (av + avd)"
   homepage "https://github.com/beshkenadze/agentvault"
-  url "https://github.com/beshkenadze/agentvault/archive/refs/tags/v0.1.0.tar.gz"
-  sha256 "c10862607c5d4a2474c2d077bd87696e7d2db7905eb97a615580bd5fc5835cbc"
+  url "https://github.com/beshkenadze/agentvault/archive/refs/tags/v0.2.0.tar.gz"
+  sha256 "ff6003b2d9a64a1ca2ba756982c4c880cbf1290439c76eea1cb2c28f0674eb84"
   # No SPDX license stanza yet: upstream has not added a LICENSE file. Once it does,
   # set e.g. `license "MIT"` here. `brew install` works without it; `brew audit
   # --strict` will note its absence.
@@ -42,17 +42,17 @@ class Agentvault < Formula
     <<~EOS
       AgentVault is macOS-only and gates secrets behind Touch ID.
 
-      Run the broker daemon as a login service (recommended — Touch ID needs the
-      GUI session, which this provides):
-        brew services start agentvault
+      Set up the broker (one time — Touch ID needs the GUI session the service runs in):
+        brew services start agentvault   # avd as a login LaunchAgent
+        av setup                         # create the Enclave-wrapped local vault
+        av unlock                        # Touch ID -> unwraps the key into the session
+        av add GITHUB_TOKEN              # store a secret (hidden prompt; never argv)
 
-      Then, in a project:
-        av init --agent claude-code    # generate adapter hook + skill files
-        av unlock                      # Touch ID -> opens the session
-        av status                      # session state
+      Then, in a project with an agentvault.yaml:
+        av run --profile smoke -- your-cmd   # secret injected; output masked to {{AV:NAME}}
 
-      (For one-off use `av` also autostarts avd, but the Touch ID prompt is only
-      reliable when avd runs as the brew service above.)
+      Keychain and 1Password are read-only here (populate them with `security` / `op`).
+      Generate agent adapter files with: av init --agent claude-code
     EOS
   end
 
