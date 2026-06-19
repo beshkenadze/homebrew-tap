@@ -1,8 +1,8 @@
 class Agentvault < Formula
   desc "Agent-agnostic secret broker for AI coding agents (av + avd)"
   homepage "https://github.com/beshkenadze/agentvault"
-  url "https://github.com/beshkenadze/agentvault/archive/refs/tags/v0.2.3.tar.gz"
-  sha256 "ddfee2703afafc053cc4f37112ebd177480402b81dcae8b05c774495be19aa8e"
+  url "https://github.com/beshkenadze/agentvault/archive/refs/tags/v0.2.4.tar.gz"
+  sha256 "94d4ae4675c34522b6160b82b908ad4aea2d29b9fc2b8b1ff15fd8b20151cf93"
   # No SPDX license stanza yet: upstream has not added a LICENSE file. Once it does,
   # set e.g. `license "MIT"` here. `brew install` works without it; `brew audit
   # --strict` will note its absence.
