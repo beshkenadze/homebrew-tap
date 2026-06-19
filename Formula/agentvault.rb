@@ -1,8 +1,8 @@
 class Agentvault < Formula
   desc "Agent-agnostic secret broker for AI coding agents (av + avd)"
   homepage "https://github.com/beshkenadze/agentvault"
-  url "https://github.com/beshkenadze/agentvault/archive/refs/tags/v0.2.0.tar.gz"
-  sha256 "ff6003b2d9a64a1ca2ba756982c4c880cbf1290439c76eea1cb2c28f0674eb84"
+  url "https://github.com/beshkenadze/agentvault/archive/refs/tags/v0.2.1.tar.gz"
+  sha256 "91c92882ce2ab5d337cac8112ffdce7fed1daa69a1d78959a63c85e125ba85b7"
   # No SPDX license stanza yet: upstream has not added a LICENSE file. Once it does,
   # set e.g. `license "MIT"` here. `brew install` works without it; `brew audit
   # --strict` will note its absence.
@@ -18,11 +18,13 @@ class Agentvault < Formula
 
   def install
     ENV["CGO_ENABLED"] = "1"
-    # Build the two binaries the project ships (mirrors `make build`). av autostarts
-    # avd as a sibling on PATH, so both must live in bin. av-enclave-wrap is a niche
-    # one-time setup tool for the age-file backend and is intentionally not shipped.
-    system "go", "build", *std_go_args(output: bin/"avd"), "./cmd/avd"
-    system "go", "build", *std_go_args(output: bin/"av"), "./cmd/av"
+    # Stamp the release version into both binaries so `av version` reports it (and can
+    # flag an av/avd mismatch after an upgrade). av autostarts avd as a sibling on PATH,
+    # so both must live in bin. av-enclave-wrap is a niche one-time setup tool for the
+    # age-file backend and is intentionally not shipped.
+    ldflags = "-X main.version=v#{version}"
+    system "go", "build", *std_go_args(output: bin/"avd", ldflags: ldflags), "./cmd/avd"
+    system "go", "build", *std_go_args(output: bin/"av", ldflags: ldflags), "./cmd/av"
     (var/"log/agentvault").mkpath
   end
 
@@ -44,15 +46,19 @@ class Agentvault < Formula
 
       Set up the broker (one time — Touch ID needs the GUI session the service runs in):
         brew services start agentvault   # avd as a login LaunchAgent
-        av setup                         # create the Enclave-wrapped local vault
-        av unlock                        # Touch ID -> unwraps the key into the session
-        av add GITHUB_TOKEN              # store a secret (hidden prompt; never argv)
+        av setup                         # provision the local vault (auto-picks the tier)
+        av add GITHUB_TOKEN              # first op auto-prompts Touch ID; value via hidden prompt
 
       Then, in a project with an agentvault.yaml:
         av run --profile smoke -- your-cmd   # secret injected; output masked to {{AV:NAME}}
 
-      Keychain and 1Password are read-only here (populate them with `security` / `op`).
-      Generate agent adapter files with: av init --agent claude-code
+      Key protection: this build-from-source install stores the age key in your login
+      Keychain (OS-encrypted). The Secure Enclave tier needs a signed build (planned
+      Cask). `av unlock` is optional — operations unlock on demand.
+
+      av version          # av/avd versions (warns on mismatch), active key tier
+      Keychain/1Password are read-only here (populate with `security` / `op`).
+      Agent adapter files: av init --agent claude-code
     EOS
   end
 
