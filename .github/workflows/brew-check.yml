@@ -1,0 +1,24 @@
+name: brew audit + style
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tap-syntax:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tap the checkout into Homebrew
+        run: |
+          TAP="$(brew --repository)/Library/Taps/beshkenadze/homebrew-tap"
+          rm -rf "$TAP"; mkdir -p "$(dirname "$TAP")"
+          ln -s "$GITHUB_WORKSPACE" "$TAP"
+      - name: brew style
+        run: brew style beshkenadze/tap
+      - name: brew audit --strict
+        run: brew audit --strict --tap beshkenadze/tap
