@@ -1,9 +1,9 @@
 class ContainerAT160 < Formula
   desc "Create and run Linux containers using lightweight virtual machines"
   homepage "https://github.com/beshkenadze/container"
-  url "https://github.com/beshkenadze/container/releases/download/1.6.0-bshk.1/container-1.6.0-bshk.1-installer-signed.pkg"
-  version "1.6.0-bshk.1"
-  sha256 "9017fb32c6417b514ae35fa863418b5a40f321b0efe8a4b74b0dcf83e89776fd"
+  url "https://github.com/beshkenadze/container/releases/download/1.6.0-bshk.2/container-1.6.0-bshk.2-installer-signed.pkg"
+  version "1.6.0-bshk.2"
+  sha256 "048cbe2bd5bf1c4c011d5edfae43f2dca2a38e7269d9016bfbbb68017ed48b4f"
   license "Apache-2.0"
 
   keg_only :versioned_formula
